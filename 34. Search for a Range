@@ -1,0 +1,80 @@
+/*
+Given an array of integers sorted in ascending order, find the starting and ending position of a given target value.
+Your algorithm's runtime complexity must be in the order of O(log n).
+If the target is not found in the array, return [-1, -1].
+
+For example,
+Given [5, 7, 7, 8, 8, 10] and target value 8,
+return [3, 4].
+*/
+
+// brute force solution
+public class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int start = -1;
+        int end = -1;
+        for (int i=0; i<nums.length; i++) {
+            if (nums[i]==target) {
+                start=i;
+                end = i;
+                break;
+            }
+        }
+        
+        if (start!=-1) {
+            for (int i=start; i<nums.length; i++) {
+                if (nums[i]==target && i>start) {
+                    end=i;
+                }
+            } 
+        }
+        return new int[] {start, end};
+    }
+}
+
+// binary search solution
+public class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int[] ans = {-1, -1};
+        if (nums==null || nums.length==0) return ans;
+        
+        // search for left bound
+        int left = 0;
+        int right = nums.length-1;
+        while (left+1<right) {
+            int mid = left+(right-left)/2;
+            if (nums[mid]<target) {
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        if (nums[left]==target) {
+            ans[0]=left;
+        } else if (nums[right]==target) {
+            ans[0]=right;
+        } else {
+            return ans;
+        }
+        
+        // search for right bound
+        int newleft = 0;
+        int newright = nums.length-1;
+        while (newleft+1<newright) {
+            int mid = newleft+(newright-newleft)/2;
+            if (nums[mid]>target) {
+                newright=mid;
+            } else {
+                newleft = mid;
+            }
+        }
+        if (nums[newright]==target) {
+            ans[1]=newright;
+        } else if (nums[newleft]==target) {
+            ans[1]=newleft;
+        } else {
+            return ans;
+        }
+        return ans;
+    }
+}
