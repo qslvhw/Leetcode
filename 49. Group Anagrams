@@ -1,0 +1,40 @@
+/*
+Given an array of strings, group anagrams together.
+
+For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"], 
+Return:
+[
+  ["ate", "eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+*/
+
+// values of anagram are the same.   Replace map.get(ch) to map.get(String.valueOf(ch)) is able to well explained.
+
+public class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> ans = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        
+        Arrays.sort(strs);
+        
+        for (String s: strs) {
+            char[] c = s.toCharArray();
+            Arrays.sort(c);
+            String ch = new String(c);
+            if (map.containsKey(ch)) {
+                map.get(ch).add(s);
+            } else {
+                List<String> list = new ArrayList<>();
+                list.add(s);
+                map.put(ch, list);
+            }
+        }
+        
+        for (List<String> list : map.values()) {
+            ans.add(list);
+        }
+        return ans;
+    }
+}
