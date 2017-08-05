@@ -1,0 +1,40 @@
+/*Given a collection of distinct numbers, return all possible permutations.
+For example,
+[1,2,3] have the following permutations:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+*/
+// recersive solution: everytime recerse from 0, label visited[] to skip appeared element.
+
+public class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        helper(nums, ans, list, visited);
+        return ans;
+    }
+    public void helper(int[] nums, List<List<Integer>> ans, List<Integer> list, boolean[] visited) {
+        if (list.size()==nums.length) {
+            List<Integer> s = new ArrayList<>(list);
+            ans.add(s);
+            return;
+        }
+        
+        for (int i=0; i<nums.length; i++) {
+            if (!visited[i]) {
+                list.add(nums[i]);
+                visited[i]=true;
+                helper(nums, ans, list, visited);
+                list.remove(list.size()-1);
+                visited[i]=false;
+            }
+        }
+    }
+}
