@@ -1,0 +1,68 @@
+Given a list, rotate the list to the right by k places, where k is non-negative.
+
+For example:
+Given 1->2->3->4->5->NULL and k = 2,
+return 4->5->1->2->3->NULL.
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+// straightfroward: use two pointers fastnode and slownode
+public class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head==null || k==0) return head;
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode newhead = new ListNode(0);
+        
+        int len = 0;
+        while (fast!=null) {
+            len++;
+            fast = fast.next;
+        }
+        fast = head;
+        k = k%len;
+        if (k==0) return head;
+        for (int i=0; i<k; i++) {
+            fast = fast.next;
+        }
+        while (fast.next!=null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        newhead = slow.next;
+        fast.next = head;
+        slow.next = null;
+        return newhead;
+    }
+}
+
+
+
+// circle idea: after make it circle, step forward len-k, return head.
+public class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head==null || k==0) return head;
+        ListNode node = head;
+        int len = 1;
+        while (node.next!=null) {
+            len++;
+            node = node.next;
+        }
+        node.next = head;   // make it as a circle
+        k = k%len;
+        
+        for (int i=0; i<len-k; i++) {
+            node = node.next;
+        }
+        head = node.next;
+        node.next = null;
+        return head;
+    }
+}
