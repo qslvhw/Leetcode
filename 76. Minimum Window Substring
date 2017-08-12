@@ -1,0 +1,67 @@
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+Note:
+If there is no such window in S that covers all characters in T, return the empty string "".
+If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+
+
+public class Solution {
+    public String minWindow(String s, String t) {
+        int[] map = new int[256];
+        for (char c : t.toCharArray()) {
+            map[c]++;
+        }
+        
+        int left=0, right=0, start=0;
+        int min = Integer.MAX_VALUE;
+        int cnt=t.length();
+        
+        while (right<s.length()) {
+            if (map[s.charAt(right)]>0) cnt--;
+            map[s.charAt(right)]--;
+            
+            while (cnt==0) {
+                if (right-left+1 < min) {
+                    min = right-left+1;
+                    start = left;
+                }
+                if (map[s.charAt(left)]>=0) cnt++;
+                map[s.charAt(left)]++;
+                left++;
+            }
+            right++;
+        }
+        
+        if (start+min > s.length()) return "";
+        return s.substring(start, start+min);
+    }
+}
+
+
+
+// template to solve sliding window problems:
+public class temp {
+	public int findSubstring(String s){
+        int[] map = new int[256];
+        int counter; // check whether the substring is valid
+        int begin=0, end=0; //two pointers, one point to tail and one  head
+        int d; //the length of substring
+
+        for() { /* initialize the hash map here */ }
+        
+        while(end<s.size()){
+            if(map[s[end++]]-- ?){  /* modify counter here */ }
+            while(/* counter condition */){            
+                 /* update d here if finding minimum */
+                 //increase begin to make it invalid/valid again */        
+                if(map[s[begin++]]++ ?){ /*modify counter here*/ }
+            }  
+            /* update d here if finding maximum*/
+        }
+        return d;
+  }
+}
