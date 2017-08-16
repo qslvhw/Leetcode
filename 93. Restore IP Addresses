@@ -1,0 +1,39 @@
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+For example:
+Given "25525511135",
+return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+
+
+// consider following when using dfs:
+   1. having 3 components, then check if the left part is valid, return with answer
+   2. do dfs for each component between 1~3 digits, check if it's valid
+
+public class Solution {
+    public List<String> restoreIpAddresses(String s) {
+      // valid is from 0 to 255, have <= 3 digits, have 4 parts
+        List<String> ans = new ArrayList<>();
+        if (s.length()<4 || s.length()>12) return ans;
+        helper(s, "", ans, 0);
+        return ans;
+    }
+    public void helper(String s, String temp, List<String> ans, int start) {
+        if (start==3 && isValid(s)) {
+            ans.add(temp+s);
+            return;
+        }
+        
+        for (int i=0; i<3 && i<s.length()-1; i++) {
+            String sub = s.substring(0, i+1);   // dfs for 1~3 digits in each component
+            if (isValid(sub)) {
+                helper(s.substring(i+1, s.length()), temp+sub+".", ans, start+1);
+            }
+        }
+    }
+    public boolean isValid(String sub) {
+        if (sub.charAt(0)=='0') return sub.equals("0");  // 000.000.00.000 is not allowed. check substring=="0" when it begins with "0"
+        int num = Integer.parseInt(sub);
+        if (num>=0 && num<=255) return true;
+        else return false;
+    }
+}
