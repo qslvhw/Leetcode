@@ -1,0 +1,77 @@
+Given a binary tree, return the zigzag level order traversal of its nodes' values. 
+(ie, from left to right, then right to left for the next level and alternate between).
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its zigzag level order traversal as:
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 
+ // interative solution
+public class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root==null) return ans;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        int h = 1;
+        while (!q.isEmpty()) {
+            int len = q.size();
+            List<Integer> list = new ArrayList<>();
+            for (int i=0; i<len; i++) {
+                TreeNode node = q.poll();
+                if (node.left!=null) q.add(node.left);
+                if (node.right!=null) q.add(node.right);
+                list.add(node.val);
+            }
+            if (h%2 == 0) {
+                Collections.reverse(list);
+            }
+            ans.add(list);
+            h++;
+        }
+        return ans;
+    }
+}
+
+// recersive solution
+public class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root==null) return ans;
+        helper(root, ans, 0);
+        return ans;
+    }
+    public void helper(TreeNode root, List<List<Integer>> ans, int h) {
+        if (root==null) return;
+        // add a new level with an empty list
+        if (h == ans.size()) {
+            ans.add(new ArrayList<>());
+        }
+        if ((h+1)%2 == 0) {
+            ans.get(h).add(0, root.val);
+        } else {
+            ans.get(h).add(root.val);
+        }
+        helper(root.left, ans, h+1);
+        helper(root.right, ans, h+1);
+    }
+}
