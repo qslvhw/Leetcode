@@ -1,0 +1,48 @@
+Given a string s, partition s such that every substring of the partition is a palindrome.
+Return all possible palindrome partitioning of s.
+
+For example, given s = "aab",
+Return
+
+[
+  ["aa","b"],
+  ["a","a","b"]
+]
+
+
+// refer to validPalindrome. use dfs to check substring
+
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        helper(s, 0, ans, list);
+        return ans;
+    }
+    public List<List<String>> helper(String s, int index, List<List<String>> ans, List<String> list) {
+        if (index == s.length()) {
+            ans.add(new ArrayList<>(list));
+            return ans;
+        }
+        
+        for (int i=index; i<s.length(); i++) {
+            String str = s.substring(index, i+1);
+            if (check(str)) {
+                list.add(str);
+                helper(s, i+1, ans, list);
+                list.remove(list.size()-1);
+            }
+        }
+        return ans;
+    }
+    public boolean check(String s) {
+        int left = 0;
+        int right = s.length()-1;
+        while (left<right) {
+            if (s.charAt(left)!=s.charAt(right)) return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
