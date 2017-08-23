@@ -1,0 +1,83 @@
+Given a 2D board containing 'X' and 'O' (the letter O), capture all regions surrounded by 'X'.
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+For example,
+X X X X
+X O O X
+X X O X
+X O X X
+After running your function, the board should be:
+X X X X
+X X X X
+X X X X
+X O X X
+
+
+/* idea is manipulating the board edge. the 'O' in the edge cannot be surrounded so that we mark as '#'. 
+ * search the inner edge in the board where 'O' has already marked as '#', if there is any, also mark as '#'. 
+ * For example:
+ * X X X X        X X X X
+ * X O O X   ==>  X # # X
+ * X O X X        X # X X
+ *
+ * then filp board. if board[i][j] == 'O', flip to 'X'. if board[i][j] == '#', flip to 'O'.
+ 
+class Solution {
+    public void solve(char[][] board) {
+        if (board==null || board.length<=1 || board[0].length<=1) return;
+        int row = board.length;
+        int col = board[0].length;
+        
+        for (int j=0; j<col; j++) {
+            fill(board, 0, j);
+            fill(board, row-1, j);
+        }
+        for (int i=0; i<row; i++) {
+            fill(board, i, 0);
+            fill(board, i, col-1);
+        }
+        
+        for (int i=0; i<row; i++) {
+            for (int j=0; j<col; j++) {
+                if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+    public void fill(char[][] board, int i, int j) {
+        if (board[i][j] == 'X') return;
+        
+        int n = board.length;
+        int m = board[0].length;
+        board[i][j] = '#';
+        Queue<Integer> q = new LinkedList<>();
+        int index = i*m+j;
+        q.add(index);
+        
+        while(!q.isEmpty()) {
+            index = q.poll();
+            int row = index/m;
+            int col = index%m;
+            
+            if (row>=1 && board[row-1][col] == 'O') {
+                board[row-1][col] = '#';
+                q.add((row-1)*m+col);
+            }
+            if (row<=n-2 && board[row+1][col] == 'O') {
+                board[row+1][col] = '#';
+                q.add((row+1)*m+col);
+            }
+            if (col>=1 && board[row][col-1] == 'O') {
+                board[row][col-1] = '#';
+                q.add(row*m+col-1);
+            }
+            if (col<=m-2 && board[row][col+1] == 'O') {
+                board[row][col+1] = '#';
+                q.add(row*m+col+1);
+            }
+        }
+    }
+}
