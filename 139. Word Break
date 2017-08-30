@@ -1,0 +1,34 @@
+Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, determine if s can be segmented into a space-separated sequence of one or more dictionary words. You may assume the dictionary does not contain duplicate words.
+
+For example, given
+s = "leetcode",
+dict = ["leet", "code"].
+Return true because "leetcode" can be segmented as "leet code".
+
+// for example given above:
+     l e e t c o d e
+     o x x x o x x x
+label the start of segment that is contained in dictionary.
+return the last label to see if the whole string can be segmented by words in dictionary.
+
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] dp = new boolean[s.length()+1];
+        dp[0] = true;
+        for (int i=0; i<s.length(); i++) {
+            if (!dp[i]) continue;
+            for (String dict : wordDict) {
+                int len = dict.length();
+                int end = i+len;
+                if (end>s.length()) continue;
+                String sub = s.substring(i, end);
+                if (dp[end]) continue;
+                if (sub.equals(dict)) {
+                    dp[end] = true;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
