@@ -1,0 +1,38 @@
+Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+ 
+ 1->2->3->4            slow and fast meet in 7.   assume 1->2 is  a, 2->7 is b, 7->2 is c.  
+     \     \                                      slow = a+b, fast = a+b+c+b. 2*(a+b)=a+b+c+b, a=c. 
+       8    \                                     when slow=fast, then slow=head, if slow==again, the slow is where cycle begins.
+       \    5
+        7<-6/
+ 
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head, slow = head;
+        while (fast!=null && fast.next!=null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                slow = head;
+                while (slow!=fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
+}
