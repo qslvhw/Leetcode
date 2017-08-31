@@ -1,0 +1,47 @@
+Sort a linked list in O(n log n) time using constant space complexity.
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+ 
+ O(nlogn) time complexity, so consider merge sort. sort list as left and right parts, then merge sort two parts.
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if (head==null || head.next==null) return head;
+        ListNode dummy = null;
+        ListNode slow = head, fast = head;
+        while (fast!=null && fast.next!=null) {
+            dummy = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        dummy.next = null;
+        ListNode l = sortList(head);
+        ListNode r = sortList(slow);
+        return merge(l, r);
+    }
+    public ListNode merge(ListNode n1, ListNode n2) {
+        ListNode n = new ListNode(0);
+        ListNode node = n;
+        while (n1!=null && n2!=null) {
+            if (n1.val<n2.val) {
+                node.next = n1;
+                n1 = n1.next;
+            } else {
+                node.next = n2;
+                n2 = n2.next;
+            }
+            node = node.next;
+        }
+        if (n1!=null) {
+            node.next = n1;
+        }
+        if (n2!=null) {
+            node.next = n2;
+        }
+        return n.next;
+    }
