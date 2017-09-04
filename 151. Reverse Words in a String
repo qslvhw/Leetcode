@@ -1,0 +1,21 @@
+Given an input string, reverse the string word by word.
+
+For example,
+Given s = "the sky is blue",
+return "blue is sky the".
+
+
+public class Solution {
+    public String reverseWords(String s) {
+        if (s==null || s.length()==0) return "";
+        StringBuilder ans = new StringBuilder();
+        String[] arr = s.split(" ");
+        
+        for (int i=arr.length-1; i>=0; i--) {
+            if (!arr[i].equals("")) {            // if a string starts with " ", for example " 1 2" split will return 3 elements "","1","2"
+                ans.append(arr[i]).append(" "); 
+            }
+        }
+        return ans.length()==0 ? "" : ans.substring(0, ans.length()-1);  // trim the end space
+    }
+}
