@@ -1,0 +1,55 @@
+Given two strings s and t, determine if they are isomorphic.
+Two strings are isomorphic if the characters in s can be replaced to get t.
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.
+
+For example,
+Given "egg", "add", return true.
+Given "foo", "bar", return false.
+Given "paper", "title", return true.
+
+// for example: aa, ab
+// sc[a]=1, tc[a]=1
+// sc[a]=2, tc[b]=1, return false
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        if (s.length()!=t.length()) return false;
+        int len = s.length();
+        int[] sc = new int[128];
+        int[] tc = new int[128];
+        
+        for (int i=0; i<len; i++) {
+            if (sc[s.charAt(i)] != tc[t.charAt(i)]) return false;
+            sc[s.charAt(i)] = i+1;
+            tc[t.charAt(i)] = i+1;
+        }
+        return true;
+    }
+}
+
+// super expensive stupid, but it works though 
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        int len = s.length();
+        Map<Character, Character> map1 = new HashMap<>();
+        for (int i=0; i<len; i++) {
+            if (!map1.containsKey(s.charAt(i))) {
+                map1.put(s.charAt(i), t.charAt(i));
+            } else {
+                char c = map1.get(s.charAt(i));
+                if (t.charAt(i)!=c) return false;
+            }
+        }
+        
+        Map<Character, Character> map2 = new HashMap<>();
+        for (int i=0; i<len; i++) {
+            if (!map2.containsKey(t.charAt(i))) {
+                map2.put(t.charAt(i), s.charAt(i));
+            } else {
+                char c = map2.get(t.charAt(i));
+                if (s.charAt(i)!=c) return false;
+            }
+        }
+        
+        return true;
+    }
+}
