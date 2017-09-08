@@ -1,0 +1,50 @@
+There are a total of n courses you have to take, labeled from 0 to n - 1.
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+For example:
+2, [[1,0]]
+There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible.
+2, [[1,0],[0,1]]
+There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+
+
+class Solution {
+    HashMap<Integer, ArrayList<Integer>> map;
+    int[] visit;
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (numCourses==0 || prerequisites.length==0) return true;
+        
+        int len = prerequisites.length;
+        visit = new int[numCourses];
+        map = new HashMap<>();
+        
+        for (int i=0; i<len; i++) {
+            if (!map.containsKey(prerequisites[i][1])) {         // for example: 1,2  1,3 3,4 4,1 2,3
+                map.put(prerequisites[i][1], new ArrayList<>());  //         then, 2->1   3->1,2   4->3   1->4
+            }
+            map.get(prerequisites[i][1]).add(prerequisites[i][0]); // put course for the prerequesite in list
+        }
+        
+        for (int i=0; i<len; i++) {
+            if (!dfs(prerequisites[i][0])) return false;            // dfs check if circle exits
+        }
+        return true;
+    }
+    public boolean dfs(int n) {
+        if (visit[n]==1) return true;
+        if (visit[n]==-1) return false;
+        
+        visit[n] = -1;
+        
+        if (map.containsKey(n)) {
+            for (int next : map.get(n)) {
+                if (!dfs(next)) return false;         // check circle
+            }
+        }
+        
+        visit[n] = 1;
+        return true;
+    }
+}
+
