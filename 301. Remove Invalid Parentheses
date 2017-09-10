@@ -1,0 +1,100 @@
+Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+Note: The input string may contain letters other than the parentheses ( and ).
+
+Examples:
+"()())()" -> ["()()()", "(())()"]
+"(a)())()" -> ["(a)()()", "(a())()"]
+")(" -> [""]
+
+
+// dfs
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        Set<String> ans = new HashSet<>();
+        int left=0, right=0;
+        
+        // calculate if there are left or right parentheses need to be removed
+        for (int i=0; i<s.length(); i++) {
+            if (s.charAt(i)=='(') {
+                left++;
+            } else if (s.charAt(i)==')') {
+                if (left!=0) {
+                    left--;
+                } else {
+                    right++;
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        dfs(s, ans, sb, 0, left, right, 0);
+        return new ArrayList<>(ans);
+    }
+    public void dfs(String s, Set<String> ans, StringBuilder sb, int i, int left, int right, int open) {
+        if (left<0 || right<0 || open<0) return;
+        if (i==s.length()) {
+            if (left==0 && right==0 && open==0) {
+                ans.add(sb.toString());
+            }
+            return;
+        }
+        
+        char c = s.charAt(i);
+        int len = sb.length();
+        
+        if (c=='(') {
+            dfs(s, ans, sb, i+1, left-1, right, open); // remove '('
+            dfs(s, ans, sb.append(c), i+1, left, right, open+1); // append '(' in ans string.
+        } else if (c==')') {
+            dfs(s, ans, sb, i+1, left, right-1, open); // remove ')'
+            dfs(s, ans, sb.append(c), i+1, left, right, open-1); // append')'
+        } else {
+            dfs(s, ans, sb.append(c), i+1, left, right, open); // append character
+        }
+        sb.setLength(len);  // reset to decision index
+    }
+}
+
+// bfs:
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        Queue<String> q = new LinkedList<>();
+        List<String> ans = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        boolean hasRes = false;
+        q.add(s);
+        
+        while (!q.isEmpty()) {
+            s = q.poll();
+            if (isValid(s)) {
+                ans.add(s);
+                hasRes = true;   // if has already found result for string s, then skip further search
+            }
+            if (hasRes) continue;
+            
+            for (int i=0; i<s.length(); i++) {
+                char c = s.charAt(i);
+                if (c=='(' || c==')') {
+                    String temp = s.substring(0, i) + s.substring(i+1); 
+                    if (!visited.contains(temp)) {  // list every parentheses combination in set and queue.
+                        visited.add(temp);
+                        q.add(temp);
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+    public boolean isValid(String s) {
+        int left = 0, right = 0;
+        for (int i=0; i<s.length(); i++) {
+            if (s.charAt(i)=='(') {
+                left++;
+            } else if (s.charAt(i)==')') {
+                left--;
+            }
+            
+            if (left<0) return false;
+        }
+        return left==0;
+    }
+}
