@@ -1,0 +1,54 @@
+// Given a binary tree, return the vertical order traversal of its nodes' values. (ie, from top to bottom, column by column).
+
+public List<List<Integer>> verticalOrder(TreeNode root) {
+    List<List<Integer>> result = new ArrayList<List<Integer>>();
+    if(root==null)
+        return result;
+        
+    // use map to store level and its treenodes.   
+    HashMap<Integer, ArrayList<Integer>> map = new HashMap<Integer, ArrayList<Integer>>();
+    // use tree to bfs every treenode, use level to store node's level
+    LinkedList<TreeNode> tree = new LinkedList<TreeNode>();
+    LinkedList<Integer> level = new LinkedList<Integer>();
+    tree.offer(root);
+    level.offer(0);
+    // determine how many columns in the tree
+    int min=0;
+    int max=0;
+ 
+    while(!tree.isEmpty()){
+        TreeNode n = queue.poll();
+        int l = level.poll();
+ 
+        //track min and max levels
+        min=Math.min(min, l);
+        max=Math.max(max, l);
+ 
+        if(map.containsKey(l)){
+            map.get(l).add(n.val); // if in the same level, add node to stored list.
+        }else{  // if not, create new list
+            ArrayList<Integer> list = new ArrayList<Integer>();
+            list.add(n.val);
+            map.put(l, list);
+        }
+  
+        // bfs to every node, record node and its level
+        if(n.left!=null){
+            tree.offer(n.left);
+            level.offer(l-1);
+        }
+        if(n.right!=null){
+            tree.offer(n.right);
+            level.offer(l+1);
+        }
+    }
+    // put list to answer
+    for(int i=min; i<=max; i++){
+        if(map.containsKey(i)){
+            result.add(map.get(i));
+        }
+    } 
+    return result;
+}
+
+
