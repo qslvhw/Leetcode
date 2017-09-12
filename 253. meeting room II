@@ -1,0 +1,25 @@
+Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] 
+find the minimum number of conference rooms required.
+
+public int minMeetingRooms(Interval[] intervals) {
+		Arrays.sort(intervals, new Comparator<Interval>() {
+			@Override
+			public int compare(Interval i1, Interval i2) {
+				return i1.start-i2.start;
+			}
+		});
+		
+		Queue<Integer> q = new LinkedList<>();
+		q.offer(intervals[0].end);
+		int cnt=1;
+		
+		for (int i=1; i<intervals.length; i++) {
+			if (intervals[i].start<q.peek()) {
+				cnt++;
+			} else {
+				q.poll();
+			}
+			q.offer(intervals[i].end);
+		}
+		return cnt;
+	}
