@@ -1,0 +1,52 @@
+Given a string that contains only digits 0-9 and a target value, return all possibilities to add binary operators 
+(not unary) +, -, or * between the digits so they evaluate to the target value.
+
+Examples: 
+"123", 6 -> ["1+2+3", "1*2*3"] 
+"232", 8 -> ["2*3+2", "2+3*2"]
+"105", 5 -> ["1*0+5","10-5"]
+"00", 0 -> ["0+0", "0-0", "0*0"]
+"3456237490", 9191 -> []
+
+
+/*             123
+*             / |  \
+*first      1   12   123    
+*          / \    \
+*second   2  23    3
+*        /
+*thrid  3
+*/
+
+class Solution {
+    public List<String> addOperators(String num, int target) {
+        List<String> ans = new ArrayList<>();
+        dfs(num, target, ans, "", 0, 0);
+        return ans;
+    }
+    public void dfs(String num, int target, List<String> ans, String temp, long curSum, long preSum) {
+        if (curSum==target && num.length()==0) {
+            ans.add(temp);
+            return;
+        }
+        
+        for (int i=1; i<=num.length(); i++) {    // i is in [1, num.length()], because of the definition of String.substring' boundary.
+            String first = num.substring(0,i);
+            if (first.length()>1 && first.charAt(0)=='0') return;    // avoid cases like: "00"+"0", "0"*"00". "00" is illegal
+            Long val = Long.parseLong(first);
+            
+            String second = num.substring(i);
+            if (!temp.equals("")) {
+                dfs(second, target, ans, temp+"+"+first, curSum+val, curSum);  // add "+". 
+                dfs(second, target, ans, temp+"-"+first, curSum-val, curSum);  // add "-"
+                dfs(second, target, ans, temp+"*"+first, (curSum-preSum)*val+preSum, preSum);
+                           // add "*". for example: 2+3*2 = (5-2)*2. in this case, preSum=2.
+                           // preSum is always the part that is not calculated in current loop
+            } else {
+                dfs(second, target, ans, first, curSum+val, curSum); 
+                     // if s is empty, put the first element in it, set "+" as default operation
+            }
+            
+        }
+    }
+}
