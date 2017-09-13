@@ -35,3 +35,18 @@ public class Solution extends Reader4 {
 		    return num;
 	  }
 }
+
+public int read(char[] buf, int n) {
+    char[] temp = new char[4];
+    int num = 0;
+		
+    while (num<n) {
+        int cnt = read4(temp);
+	if (cnt==0) break;
+	int index=0;
+	while (index<cnt && num<n) {
+	    buf[num++] = temp[index++];
+	}
+    }
+    return num;
+}
