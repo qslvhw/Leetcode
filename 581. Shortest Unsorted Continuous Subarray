@@ -1,0 +1,73 @@
+Given an integer array, you need to find one continuous subarray that if you only sort this subarray in ascending order, 
+then the whole array will be sorted in ascending order, too. You need to find the shortest such subarray and output its length.
+
+Example 1:
+Input: [2, 6, 4, 8, 10, 9, 15]
+Output: 5
+Explanation: You need to sort [6, 4, 8, 10, 9] in ascending order to make the whole array sorted in ascending order.
+
+// corner case: 13222
+// O(nlogn)
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        int left=0, right=nums.length-1;
+        int[] temp = nums.clone();
+        Arrays.sort(nums);
+        
+        while (left<nums.length && nums[left]==temp[left]) left++;
+        while (right>left && nums[right]==temp[right]) right--;
+        return right-left+1;
+    }
+}
+
+// one pass solution, find left most and right most.
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        int left=0, right=-1;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        
+        for (int i=0, j=nums.length-1; j>=0; i++, j--) {
+            max = Math.max(max, nums[i]);
+            if (nums[i]!=max) right=i;
+            min = Math.min(min, nums[j]);
+            if (nums[j]!=min) left=j;
+        }
+        return right-left+1;
+    }
+}
+
+
+// two passes solution, wierd .....
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        // find most left and most right that is not in order. 
+        int left=0, right=nums.length-1;
+        while (left<right && nums[left]<=nums[left+1]) left++;
+        if (left>=right) return 0;
+        while (right>left && nums[right]>=nums[right-1]) right--;
+        
+        // find min and max in unsorted array
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i=left; i<=right; i++) {
+            min = Math.min(min, nums[i]);
+            max = Math.max(max, nums[i]);
+        }
+        // [0, left] is sorted, [right, len-1] is sorted
+        int start=left, end=right;
+        for (int i=0; i<left; i++) {
+            if (nums[i]>min) {
+                start=i;
+                break;
+            }
+        }
+        for (int i=nums.length-1; i>right; i--) {
+            if (nums[i]<max) {
+                end=i;
+                break;
+            }
+        }
+        return end-start+1;
+    }
+}
