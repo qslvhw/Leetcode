@@ -1,0 +1,74 @@
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+For example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+// the original structure of this question is like following, which report error of "can't find class WordDictionary". delete and
+// implement "public class wordDictionary" instead.
+class WordDictionary {
+    /** Initialize your data structure here. */
+    public WordDictionary() {       
+    }
+    /** Adds a word into the data structure. */
+    public void addWord(String word) { 
+    }
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) { 
+    }
+}
+
+//code here: space complexity is O(n), time complexity is O(26^n).
+public class WordDictionary {
+  // define TrieNode class
+    public class TrieNode {
+        public TrieNode[] children = new TrieNode[26];
+        public String item = "";
+    }
+    private TrieNode root = new TrieNode();
+    
+    public void addWord(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            if (node.children[c-'a']==null) {          // if node does not have children, create new TrieNode for this node.
+                node.children[c-'a'] = new TrieNode();
+            }
+            node = node.children[c-'a'];               // add children to the node.
+        }
+        node.item = word;                              // add item (String) in node
+    }
+    
+    public boolean search(String word) {
+        return match(word.toCharArray(), 0, root);
+    }
+    public boolean match(char[] ch, int i, TrieNode node) {
+        if (i==ch.length) return !node.item.equals("");        // check if the searched word is empty, if empty return false
+        
+        if (ch[i]!='.') {                 // two condition: if '.' and if not '.'.
+            return node.children[ch[i]-'a']!=null && match(ch, i+1, node.children[ch[i]-'a']); // check the children is not null and match the left char.
+        } else {
+            for (int k=0; k<node.children.length; k++) {
+                if (node.children[k]!=null) {             // dfs full 26 characters to determine if matches.
+                    if (match(ch, i+1, node.children[k])) return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */
