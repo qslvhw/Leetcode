@@ -24,21 +24,16 @@ public class Solution {
         return ans;
     }
     public void helper(int[] candidates, int target, int index, List<List<Integer>> ans, List<Integer> list) {
-        if (target==0) {
-            List<Integer> s = new ArrayList<>(list);
-            ans.add(s);
+        if (target==0) {                    // using (target==0 && !ans.contains(list)) is not efficient.
+            ans.add(new ArrayList<>(list));   
             return;
         }
-        
-        int pre = -1;
-        for (int i=index; i<candidates.length; i++) {
-            if (target<candidates[i]) return;
-            if (pre!=candidates[i]) {
-                list.add(candidates[i]);
-                helper(candidates, target-candidates[i], i+1, ans, list);
-                list.remove(list.size()-1);
-                pre = candidates[i];
-            }
+       
+        for (int i=index; i<candidates.length && candidates[i]<target; i++) {
+            if (i>index && candidates[i]==candidates[i-1]) continue;       // skip duplicate
+            list.add(candidates[i]);
+            helper(candidates, target-candidates[i], i+1, ans, list);
+            list.remove(list.size()-1);
         }
     }
 }
