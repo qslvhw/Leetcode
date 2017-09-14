@@ -1,0 +1,18 @@
+Given two strings S and T, determine if they are both one edit distance apart.
+
+
+/* there are three conditions:
+*  1: lenS-lenT>1, then false;
+*  2: lenS==lenT, then compare if s.substring(i+1) equals to t.substring(i+1). because only char at i are different.
+*  3: lenS-lenT=1, determin after deleting one digit in the longer string, the left part of two strings are the same.
+*/
+public static boolean isOneEditDistance(String s, String t) {
+        for (int i=0; i<Math.min(s.length(), t.length()); i++) {
+        	if (s.charAt(i)!=t.charAt(i)) {
+        		if (s.length()==t.length()) return s.substring(i+1).equals(t.substring(i+1));
+        		else if (s.length()<t.length()) return s.substring(i).equals(t.substring(i+1));
+        		else return s.substring(i+1).equals(t.substring(i));
+        	}
+        }
+        return Math.abs(t.length()-s.length())==1;
+    }
