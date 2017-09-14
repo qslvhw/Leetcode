@@ -1,0 +1,51 @@
+Given a binary search tree and a node in it, find the in-order successor of that node in the BST.
+
+// in-order is left, root, right. using stack, push right, push root, push left.
+// set flag hasNext, if next is true, return popped node.
+// space complexity is O(n), time complexity is O(n)
+public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+    	if (root==null || p==null) return null;
+    	Stack<TreeNode> stack = new Stack<>();
+    	stack.push(root);
+    	boolean next = false;
+    	
+    	while (!stack.isEmpty()) {
+    		TreeNode node = stack.pop();
+    		if (node.right==null && node.left==null) {
+    			if (next) {
+    				return node;
+    			}
+    			if (p.val==node.val) {
+    				next = true;
+    				continue;
+    			}
+    		}
+    		
+    		if (node.right!=null) {
+    			stack.push(node.right);
+    			node.right=null;
+    		}
+    		stack.push(node);
+    		if (node.left!=null) {
+    			stack.push(node.left);
+    			node.left=null;
+    		}
+    	}
+    	return null;
+    }
+    
+// if root.val>p.val, root can be a successor, but we don't know if there is any larger node in left tree
+// if root.val<=p.val, root cannot be a successor, so we check right leaves, move root larger than p.
+public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+    	if (root==null || p==null) return null;
+    	TreeNode succ = null;
+    	while (root!=null) {
+    		if (root.val>p.val) {
+    			succ = root;
+    			root = root.left;
+    		} else {
+    			root = root.right;
+    		}
+    	}
+    	return succ;
+    }
