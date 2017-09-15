@@ -1,0 +1,57 @@
+
+// priorityQueue orders element by their natural ordering.
+// Time complexity is O(nlogk), space complexity is O(k).
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> q = new PriorityQueue<>(k);
+        for (int n : nums) {
+            q.offer(n);
+            if (q.size()>k) {
+                q.poll();
+            }
+        }
+        return q.peek();
+    }
+}
+
+// sort. Time complexity is O(nlogn).
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length-k];
+    }
+}
+
+// quickSort solution: time complexity is average: O(n), worst case: O(n^2)
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return quick(nums, 0, nums.length-1, k);
+    }
+    public int quick(int[] nums, int start, int end, int k) {
+        int pivot = end;
+        int right = end-1;
+        int left = start;
+        
+        // find where the pivot should insert
+        while (left<=right) {
+            if (nums[pivot]<nums[left]) {
+                swap(nums, left, right);
+                right--;
+            } else {
+                left++;
+            }
+        }
+        // insert pivot
+        swap(nums, left, pivot);
+        
+        int rank = nums.length-left;
+        if (rank==k) return nums[left];
+        else if (rank>k) return quick(nums, left+1, end, k);  // if rank>k, target is in the right part
+        else return quick(nums, start, left-1, k);  // if rank<k, target is in the left part
+    }
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
