@@ -38,3 +38,28 @@ public class Solution {
         return ans.toString();
     }
 }
+
+
+public class Solution {
+    public String simplifyPath(String path) {
+        // if '.', do nothing, if '..', pop stack, if 'char', push
+        Deque<String> q = new LinkedList<>();
+        Set<String> set = new HashSet<>();
+        set.add(".");
+        set.add("..");
+        set.add("");
+        String[] p = path.split("/");
+        
+        for (String s : p) {
+            if (s.equals("..") && !q.isEmpty()) q.pop();
+            else if (!set.contains(s)) q.push(s);
+        }
+        StringBuilder ans = new StringBuilder();
+        while (!q.isEmpty()) {
+            ans.append("/"+q.pollLast());
+        }
+        
+        String res = ans.toString();
+        return res.length()==0 ? "/" : res;
+    }
+}
