@@ -20,16 +20,16 @@ public class Solution extends Reader4 {
      public int read(char[] buf, int n) {
           int i=0;
 		
-		     while (i<n) {
-              if (bufIndex>=bufSize) {     // for example, after "abc", index is 4, read file again.
-				           bufSize = read4(temp);
-				           bufIndex = 0;          // after first call read4 function, "defg" remains in file, bufIndex becomes 0.
-				           if (bufSize==0) break;
-			        }
-			        buf[i] = temp[bufIndex];
-			        bufIndex++;
-			        i++;
-		     }
-		     return i;
-	   }
+	  while (i<n) {
+            if (bufIndex>=bufSize) {     // for example, after "abc", index is 4, read file again.
+		bufSize = read4(temp);
+		bufIndex = 0;          // after first call read4 function, "defg" remains in file, bufIndex becomes 0.
+		if (bufSize==0) break;
+	    }
+	    buf[i] = temp[bufIndex];
+	    bufIndex++;
+	    i++;
+          }
+	  return i;
+    }
 }
