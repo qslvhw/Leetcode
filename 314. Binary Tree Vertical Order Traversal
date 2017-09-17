@@ -17,7 +17,7 @@ public List<List<Integer>> verticalOrder(TreeNode root) {
     int max=0;
  
     while(!tree.isEmpty()){
-        TreeNode n = queue.poll();
+        TreeNode n = tree.poll();
         int l = level.poll();
  
         //track min and max levels
