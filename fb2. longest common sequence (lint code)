@@ -1,0 +1,28 @@
+// LCS for input Sequences “ABCDGH” and “AEDFHR” is “ADH” of length 3.
+// LCS for input Sequences “AGGTAB” and “GXTXAYB” is “GTAB” of length 4.
+
+// dp[i][j] = 0                            ,(i=0 || j=0)
+//          = dp[i-1][j-1]+1               ,(A(i-1)==B(i-1))
+//          = max(dp[i-1][j], dp[i][j-1])  ,(A(i-1)!=B(i-1))
+public class Solution {
+    public int longestCommonSubsequence(String A, String B) {
+        // write your code here
+        if (A.length()==0 || B.length()==0 || A==null || B==null) return 0;
+        int m = A.length();
+        int n = B.length();
+        int[][] dp = new int[m+1][n+1];
+        
+        for (int i=0; i<=m; i++) {
+            for (int j=0; j<=n; j++) {
+                if (i==0 || j==0) {
+                    dp[i][j]=0;
+                } else if (A.charAt(i-1)==B.charAt(j-1)) {
+                    dp[i][j] = dp[i-1][j-1]+1;
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+}
