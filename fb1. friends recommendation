@@ -1,0 +1,76 @@
+// recommend friends from a person's friends
+
+public class test {
+	public List<String> recommendation(String name) {
+		List<String> ans = new ArrayList<>();
+		List<String> friends = getFriends(name);
+		Set<String> set = new HashSet<>();
+		for (String f : friends) {
+			set.add(f);
+		}
+		
+		Map<String, Integer> map = new HashMap<>();
+		for (String f : friends) {
+			List<String> list = getFriends(f);
+			for (String friend : list) {
+				if (friend!="name" && !set.contains(friend)) {
+					if (map.containsKey(friend)) {
+						map.put(friend, map.get(friend)+1);
+					} else {
+						map.put(friend, 1);
+					}
+				}
+			}
+		}
+		
+		ArrayList<String>[] list = new ArrayList[friends.size()+1];
+		for (String f : map.keySet()) {
+			int cnt = map.get(f);
+			if (list[cnt]==null) list[cnt] = new ArrayList<String>();
+			list[cnt].add(f);
+		}
+		for (int i=list.length-1; i>=0; i--) {
+			if (list[i]!=null) {
+				ans.addAll(list[i]);
+			}
+		}
+		return ans;
+	}
+    public static List<String> getFriends(String name) {
+        HashMap<String, List<String>> map = new HashMap<String, List<String>>();
+        map.put("Lily", new ArrayList<String>());
+        map.put("Lucy", new ArrayList<String>());
+        map.put("Hanmeimei", new ArrayList<String>());
+        map.put("Jim", new ArrayList<String>());
+        map.put("Lilei", new ArrayList<String>());
+        map.put("Poly", new ArrayList<String>());
+        map.get("Lily").add("Lilei");
+        map.get("Lily").add("Poly");
+        map.get("Lily").add("Hanmeimei");
+        map.get("Lily").add("Jim");
+        map.get("Lucy").add("Lilei");
+        map.get("Lucy").add("Poly");
+        map.get("Lucy").add("Hanmeimei");
+        map.get("Lucy").add("Lily");
+        map.get("Lilei").add("Jim");
+        map.get("Lilei").add("Lucy");
+        map.get("Lilei").add("UncleWang");
+        map.get("Lilei").add("Hanmeimei");
+        map.get("Lilei").add("Lily");
+        map.get("Jim").add("Lily");
+        map.get("Jim").add("Lucy");
+        map.get("Jim").add("Lilei");
+        map.get("Poly").add("Jim");
+        map.get("Poly").add("Lilei");
+        return map.get(name);
+    }
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        test sol = new test();
+        //List<String> res = sol.recommendation("Poly");
+        List<String> res = sol.recommendation("Jim");
+        for (String each : res) {
+            System.out.println(each);
+        }
+    }
+}
