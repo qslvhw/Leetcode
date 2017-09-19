@@ -11,17 +11,19 @@ return 4. (because the subarray [1, -1, 5, -2] sums to 3 and is the longest)
 public class solution {
 	public int maxSubArrayLen(int[] nums, int k) {
         HashMap<Integer, Integer> map = new HashMap<>();
+	map.put(0,-1);
         int max = 0;
         int sum = 0;
         for (int i=0; i<nums.length; i++) {
         	sum += nums[i];
         	int diff = k-sum;
-        	if (map.containsKey(diff)) {
-        		max = Math.max(max, i-map.get(diff)+1);
-        	} else {
-        		map.put(sum, i);
+        	if (!map.containsKey(sum)) {
+		    map.put(sum, i);
         	}
+		if (map.containsKey(diff)) {
+		    max = Math.max(max, i-map.get(diff));
+		}
         } 
-        return max;
+        return max==0? 0:max;
     }
 }
