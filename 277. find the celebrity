@@ -20,11 +20,11 @@ public int findCelebrity(int n) {
 		}
     // check if cel is a true celebrity. if someone doesn't know cel, then -1, if cel knows someone, then -1.
 		for (int i=1; i<=n; i++) {
-			if (i!=l) {
-				if (!knows(i,l) || know(l,i)) return -1;
+			if (i!=cel) {
+				if (!knows(i,cel) || know(cel,i)) return -1;
 			}
 		}
-		return l;
+		return cel;
 }
 
 public int findCelebrity(int n) {	
