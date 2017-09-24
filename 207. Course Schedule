@@ -8,7 +8,45 @@ There are a total of 2 courses to take. To take course 1 you should have finishe
 2, [[1,0],[0,1]]
 There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
 
+// topology. bfs.
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList[] graph = new ArrayList[numCourses];
+        int[] index = new int[numCourses];
+        // record graph and its degree level
+        for (int i=0; i<numCourses; i++) {
+            graph[i] = new ArrayList<Integer>();
+        }
+        for (int i=0; i<prerequisites.length; i++) {
+            graph[prerequisites[i][1]].add(prerequisites[i][0]);
+            index[prerequisites[i][0]]++;
+        }
+        // find entry
+        Queue<Integer> q = new LinkedList<>();
+        int cnt=0;
+        for (int i=0; i<numCourses; i++) {
+            if (index[i]==0) {
+                q.add(i);
+            }
+        }
+        while (!q.isEmpty()) {
+            int cur = q.poll(); // get entry element
+            ArrayList<Integer> list = graph[cur]; // get element's next list
+            cnt++; // record number of elements go through
+            for (int i=0; i<list.size(); i++) {
+                int next = list.get(i);
+                index[next]--; 
+                if (index[next]==0) { // find the next entry element
+                    q.add(next);
+                }
+            }
+        }
+        return cnt==numCourses; // go through graph, if number of elements equals to numCourses, then true
+    }
+}
 
+
+// topology. dfs
 class Solution {
     HashMap<Integer, ArrayList<Integer>> map;
     int[] visit;
