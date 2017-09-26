@@ -1,0 +1,86 @@
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or 
+vertically neighboring. The same letter cell may not be used more than once in a word.
+
+For example,
+Given words = ["oath","pea","eat","rain"] and board =
+[
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+Return ["eat","oath"].
+
+// Trie + DFS. 
+class Solution {
+    public List<String> findWords(char[][] board, String[] words) {
+        Set<String> set = new HashSet<>();
+        // dfs for each word in words
+        Trie root = new Trie();
+        int m = board.length;
+        int n = board[0].length;
+        for (String w : words) {
+            root.insert(w);       // record words[] in trie
+        }
+        List<String> ans = new ArrayList<>();
+        boolean[][] visited = new boolean[m][n];
+        for (int i=0; i<m; i++) {
+            for (int j=0; j<n; j++) {
+                dfs(board, "", set, i, j, root, visited);   // dfs for elements
+            }
+        }
+        return new ArrayList<String>(set);
+    }
+    public void dfs(char[][] board, String s, Set<String> set, int i, int j, Trie root, boolean[][] visited) {
+        int m = board.length;
+        int n = board[0].length;
+        if (i<0 || j<0 || i>=m || j>=n || visited[i][j]) return;
+        
+        s = s+board[i][j];
+        if (!root.startWith(s)) return;
+        if (root.search(s)) set.add(s);
+        
+        visited[i][j] = true;
+        dfs(board, s, set, i+1, j, root, visited);
+        dfs(board, s, set, i-1, j, root, visited);
+        dfs(board, s, set, i, j+1, root, visited);
+        dfs(board, s, set, i, j-1, root, visited);
+        visited[i][j] = false;
+    }
+}
+class TrieNode{
+    TrieNode[] children = new TrieNode[26];
+    String content = "";
+}
+class Trie {
+    TrieNode root = new TrieNode();
+    public void insert(String w) {
+        TrieNode node = root;
+        for (char c : w.toCharArray()) {
+            if (node.children[c-'a']==null) {
+                node.children[c-'a'] = new TrieNode();
+            }
+            node = node.children[c-'a'];
+        }
+        node.content = w;
+    }
+    public boolean search(String w) {
+        TrieNode node = root;
+        for (char c : w.toCharArray()) {
+            if (node.children[c-'a']==null) return false;
+            node=node.children[c-'a'];
+        }
+        if (node.content.equals(w)) return true;
+        else return false;
+    }
+    public boolean startWith(String w) {
+        TrieNode node = root;
+        for (char c: w.toCharArray()) {
+            if (node.children[c-'a']==null) return false;
+            node = node.children[c-'a'];
+        }
+        return true;
+    }
+}
+
