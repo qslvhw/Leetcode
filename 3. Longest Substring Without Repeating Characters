@@ -1,0 +1,31 @@
+Given a string, find the length of the longest substring without repeating characters.
+
+Examples:
+Given "abcabcbb", the answer is "abc", which the length is 3.
+Given "bbbbb", the answer is "b", with the length of 1.
+Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence 
+and not a substring.
+
+
+// 简化版sliding window。用 int[] map 记录每个char对应的index，如果碰到mpap[char]!=0, 说明之前记录过同样的元素，出现重复
+更新start的值，用来后面计算最大长度。对每个元素，都在map中存入目前元素的index为i+1 (假如s只有一个元素，返回的是1，所以index=i+1)。
+每次出现重复时，non-repeating的长度为i-start+1，更新最大长度。
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if (s.length()==0 || s==null) return 0;
+        int start=0, len=0;
+        int[] map = new int[128];
+        
+        for (int i=0; i<s.length(); i++) {
+            char c = s.charAt(i);
+            if (map[c]>0) {
+                int index = map[c];
+                start = Math.max(start, index);
+            }
+            map[c]=i+1;
+            len = Math.max(len, i-start+1);
+        }
+        return len;
+    }
+}
