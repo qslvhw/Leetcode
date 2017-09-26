@@ -1,0 +1,49 @@
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of 
+their nodes contain a single digit. Add the two numbers and return it as a linked list.
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+
+
+按顺序加和。先创建一个dummy head作为固定的listhead，结束后返回dummy.next。
+创建三个ListNode分别copy l1, l2, dummy操作，定义sum记录listnode之和。
+l1, l2可能长度不等，只要其中一个list还有元素时就可以进行加和，表示为 while (n1!=null || n2!=null)
+n3的下一位的值为sum，所以 n3.next = new ListNode(sum%10)，更新n3和sum的值循环。
+判断结束后sum是否有剩余，有的话多加一个listnode。
+
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode n1 = l1;
+        ListNode n2 = l2;
+        ListNode n3 = dummy;
+        int sum = 0;
+        
+        while (n1!=null || n2!=null) {
+            if (n1!=null) {
+                sum += n1.val;
+                n1 = n1.next;
+            }
+            if (n2!=null) {
+                sum += n2.val;
+                n2 = n2.next;
+            }
+            n3.next = new ListNode(sum%10);
+            sum /= 10;
+            n3 = n3.next;
+        }
+        if (sum != 0) {
+            n3.next = new ListNode(sum);
+        }
+        return dummy.next;
+    }
+}
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
