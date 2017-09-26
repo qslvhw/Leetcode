@@ -2,6 +2,10 @@ Given nums = [2, 7, 11, 15], target = 9,
 Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].
 
+// HashMap
+建立hashmap，循环。算出数组里每个元素与target的差值，例如当i=1时，9-7=2，map中已经有2，说明找到target pair；如果map中没有difference，把当前元素和
+index放入map，例如i=0时，9-2=7，7不在map中，map.push(2, 0)
+
 class Solution {
     public int[] twoSum(int[] nums, int target) {
         HashMap<Integer, Integer> map = new HashMap<>();
