@@ -1,0 +1,48 @@
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: 
+(you may want to display this pattern in a fixed font for better legibility)
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string text, int nRows);
+convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
+
+先自己写几个例子找规律
+// for example: numRows=4, 可以得出以下，其中 k=numRows*2-2
+0        6       12       0+            6+              6           0, k, 2k 
+1     5  7     11         1+ (1+6-2)+ (1+6)+ (1+6+2)+   6           1, 1+k-2, 1+2k-2
+2  4     8  10            2+ (2+6-4)+ (2+6)+ (2+6+6-4)              2, 2+k-4, 2+2k-4
+3        9                3+ (3+6)                                  3, 3+k
+
+定义index=i, 当i=0 or numRows-1，即第一行或最后一行时，ans.append(index+k*n)
+             当i=其他时，ans.append(step), step=index-2*n
+返回toString
+
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows==1) return s;
+        StringBuilder ans = new StringBuilder();
+        int k = numRows*2-2;
+
+        for (int i=0; i<numRows; i++) {
+            int index = i;
+            int mid = 2*i;
+            if (i==0 || i==numRows-1) {
+                while (index<s.length()) {
+                    ans.append(s.charAt(index));
+                    index += k;
+                }  
+            } else {
+                while (index<s.length()) {
+                    ans.append(s.charAt(index));
+                    index += k;
+                    int step = index-mid;
+                    if (step<s.length()) ans.append(s.charAt(step)); 
+                }
+            }
+        }
+        return ans.toString();
+    }
+}
