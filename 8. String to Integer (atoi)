@@ -1,0 +1,37 @@
+Implement atoi to convert a string to an integer.
+// atoi 是c语言中把string转换为int的程序。
+Hint: Carefully consider all possible input cases. If you want a challenge, please do not see below and ask yourself what are 
+the possible input cases.
+Notes: It is intended for this problem to be specified vaguely (ie, no given input specs). You are responsible to gather all 
+the input requirements up front.
+
+// 考虑corner case：首位是+-符号；首位有space；ans overflow。注意：在计算ans时，要用double记录，最后返回int。因为overflow时ans的加和会出错。
+
+class Solution {
+    public int myAtoi(String str) {
+        if (str==null || str.length()==0) return 0;
+        // + - sign, start with space, start with 0, null, overflow
+        str = str.trim();    // trim space at beginning
+        int i=0;
+        
+        int sign=1;          // record sign
+        if (str.charAt(0)=='-') {
+            sign=-1;
+            i++;
+        } else if (str.charAt(0)=='+'){
+            i++;
+        }
+        
+        double ans = 0;         // define double to record ans
+        while (i<str.length() && str.charAt(i)>='0' && str.charAt(i)<='9') {
+            ans = ans*10 + (str.charAt(i)-'0');
+            i++;
+        }
+        
+        if (sign==-1) ans = -ans;         // determine positive or negative
+        if(ans>Integer.MAX_VALUE) return Integer.MAX_VALUE;    // if overflow to the upperbond, return Int.MAX
+        if (ans<Integer.MIN_VALUE) return Integer.MIN_VALUE;   // if overflow to the lowerbond, return Int.MIN
+        
+        return (int) ans;      // return int type ans
+    }
+}
