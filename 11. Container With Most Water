@@ -1,0 +1,26 @@
+Given n non-negative integers a1, a2, ..., an, where each represents a point at coordinate (i, ai). 
+n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). 
+Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+Note: You may not slant the container and n is at least 2.
+
+// 这题一开始想了很久发现读错题目了嗯。。。。
+用two pointer的思路，先画个图看看就懂了，比如：1 2 4 2 3 2 5 2，应该返回(6-2)*4。
+最大面积应该为h*d. h是左右height之间短的那个，d是左右两板之间的距离。每次计算面积后，更新最大面积。
+
+class Solution {
+    public int maxArea(int[] height) {
+        int l=0, r=height.length-1;
+        int max = 0;
+        
+        while (l<r) {
+            int d = r-l;
+            int h = Math.min(height[l], height[r]);
+            max = Math.max(max, d*h);
+            if (height[l]<height[r]) l++;
+            else r--;
+        }
+        return max;
+    }
+}
+
+
