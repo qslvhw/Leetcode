@@ -1,0 +1,24 @@
+Determine whether an integer is a palindrome. Do this without extra space.
+
+
+// 思路真的是naive难度，写的时候注意细节。
+   要判断左右两边是否相等，需要在第一个while里计算divisor 10^(len-1)。然后分别判断左右就好啦～，记得更新x和lenBit
+class Solution {
+    public boolean isPalindrome(int x) {
+        if (x<0) return false;
+        int lenBit = 1;
+        
+        while (x/lenBit>=10) lenBit*=10;
+        
+        while (x!=0) {
+            int left = x/lenBit;
+            int right = x%10;
+            if (left!=right) return false;
+            x = (x%lenBit)/10;
+            lenBit /= 100;
+        }
+        return true;
+    }
+}
+
+
